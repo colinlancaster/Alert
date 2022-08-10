@@ -1,4 +1,4 @@
-//new Alert('Snippet saved successfully').Execute();
+// Example new Alert({message: 'Snippet successfully copied!'}).Execute()
 class Alert {
     cssClasses = {
         alert: 'js-snackbar',
@@ -26,7 +26,6 @@ class Alert {
     };
 
     constructor(opts) {
-        this.that = this;
         this.interval;
         this.element = null;
         this.container = '';
@@ -43,34 +42,30 @@ class Alert {
 
         this.element = this.#createAlert();
         this.container.appendChild(this.element);
+
         // // If the timeout property isn't false and it's greater than 0...
         if (this.options.timeout !== false && this.options.timeout > 0) {
             // ...Close the Alert after the given amount of time.
-            const close = this.#close;
-            this.interval = setTimeout(close, this.options.timeout);
+            this.interval = setTimeout(() => { this.#close(); }, this.options.timeout); // not this
         }
     }
 
+    /**Applies default values to all of the constructor props.*/
     #applyDefaults() {
         this.options.message = this.userOptions?.message ?? 'Operation performed successfully.',
         this.options.dismissible = this.userOptions?.dismissible ?? true;
-        this.options.timeout = this.userOptions?.timeout ?? 5000;
+        this.options.timeout = this.userOptions?.timeout ?? 2000;
         this.options.status = this.userOptions?.status ? this.userOptions.status.toLowerCase().trim() : '';
         this.options.actions = this.userOptions?.actions ?? [];
         this.options.fixed = this.userOptions?.fixed ?? false;
         this.options.position = this.userOptions?.position ?? 'br';
         this.options.container = this.userOptions?.container ?? document.body;
 
-        // I question these next three.
+        // I question these next three
         this.options.width = this.userOptions?.width ?? '250px';
         this.options.speed = this.userOptions?.speed ?? 'medium';
         this.options.icon = this.userOptions?.icon ?? '+';
     }
-
-    /**
-     * Utility Functions
-     *
-     *  */
 
     #setContainer() {
         let target = this.#getOrFindContainer();
@@ -84,6 +79,11 @@ class Alert {
         this.container = this.#getOrAddContainerIn(target);
     }
 
+    /**
+     * Utility Functions
+     *
+     *  */
+
     #setPosition() {
         this.container.classList.add(this.#getPositionCssClass());
 
@@ -93,7 +93,6 @@ class Alert {
             this.container.classList.remove(this.cssClasses.alertFixed);
         }
     }
-
     #getPositionCssClass() {
         switch(this.options.position) {
             case 'bl':
@@ -138,7 +137,7 @@ class Alert {
                 return node;
             }
         }
-        
+
         return this.#createContainer(target);
     }
 
@@ -155,6 +154,7 @@ class Alert {
         return container;
     }
 
+    /**Handles create of the Alert elements. */
     #createAlert() {
         const outerAlert = this.#createOuterAlert();
         const innerAlert = this.#createInnerAlert();
@@ -164,6 +164,7 @@ class Alert {
         return outerAlert;
     }
 
+    /**Handles creation of the inner alert element. */
     #createInnerAlert() {
         const innerAlert = document.createElement('div');
 
@@ -174,12 +175,12 @@ class Alert {
 
         // This part is fucked up
         this.#addActionsTo(innerAlert);
-        this.#addDismissButtonTo(innerAlert, this);
+        this.#addDismissButtonTo(innerAlert);
 
         return innerAlert;
     }
 
-    // In support of this.#createMessage()
+    /**Handles creation of the outer alert element. */
     #createOuterAlert() {
         const outerElement = document.createElement('div');
 
@@ -202,6 +203,7 @@ class Alert {
         element.style.width = this.options.width;
     }
 
+    /**Sets the speed at which the alert transitions. */
     #setSpeed(element) {
         const { speed } = this.options;
 
@@ -211,12 +213,13 @@ class Alert {
                 break;
             case 'string':
                 element.style.transitionDuration = speed;
-                break;                
+                break;
             default:
                 break;
         }
     }
 
+    /**Calls `applyColorTo()` and `applyIconTo()`. */
     #applyColorAndIconTo(element) {
         if (this.options.status) return;
 
@@ -229,6 +232,7 @@ class Alert {
         element.appendChild(status);
     }
 
+    /**Applies color to the alert. */
     #applyColorTo(element) {
         switch (this.options.status) {
             case 'success':
@@ -251,6 +255,7 @@ class Alert {
         }
     }
 
+    /**Applies an icon to the alert. */
     #applyIconTo(element) {
         if (this.options.icon) return;
 
@@ -284,6 +289,7 @@ class Alert {
         element.appendChild(icon);
     }
 
+    /**Applies message into the alert. */
     #insertMessageTo(element) {
         this.messageWrapper = document.createElement('div');
         this.messageWrapper.classList.add(this.cssClasses.alertWrapper);
@@ -296,6 +302,7 @@ class Alert {
         element.appendChild(this.messageWrapper);
     }
 
+    /**Adds many actions via `addAction` */
     #addActionsTo(element) {
         if (typeof this.options.actions !== 'object') return;
 
@@ -304,6 +311,10 @@ class Alert {
         }
     }
 
+    /**Adds functionality/actions to the alert.
+     * E.g. the function that fires when a button
+     * in the alert is pressed.
+     */
     #addAction(element, action, alert) {
         const button = document.createElement('span');
         button.classList.add(this.cssClasses.alertAction);
@@ -313,29 +324,33 @@ class Alert {
             if (action.dismiss === true) {
                 button.onclick = function() {
                     action.function();
-                    action.#close();
+                    alert.#close(); // not this
                 }
             } else {
                 button.onclick = action.function;
             }
         } else {
-            button.onclick = alert.#close;
+            console.log('do we get here?')
+            button.onclick = alert.#close(); // not this
         }
 
         element.appendChild(button);
     }
 
-    #addDismissButtonTo(element, alert) {
-        if (!alert.options.dismissible) return;
+    /**Adds a dismiss button to the alert. */
+    #addDismissButtonTo(element) {
+        if (!this.options.dismissible) return;
+        console.log('From addDismissButtonTo')
         console.dir(this)
         const closeButton = document.createElement('span');
-        closeButton.classList.add(alert.cssClasses.alertClose);
+        closeButton.classList.add(this.cssClasses.alertClose);
         closeButton.innerText = '\u00d7';
-        closeButton.onclick = alert.#close;
+        closeButton.addEventListener('click', () => { this.#close(); })
 
         element.appendChild(closeButton);
     }
 
+    /**Retrieves the height of the alert. */
     #getMessageHeight() {
         const wrapperStyles = window.getComputedStyle(this.messageWrapper);
 
@@ -344,6 +359,7 @@ class Alert {
             + parseFloat(wrapperStyles.getPropertyValue('padding-bottom'));
     }
 
+    /**Opens the alert. Adds `transitioned` event listener. */
     #open() {
         const contentHeight = this.#getMessageHeight();
         this.element.style.height = contentHeight + 'px';
@@ -357,41 +373,34 @@ class Alert {
         });
     }
 
+    /**Closes the alert. Uses `requestAnimationFrame()` to make it look nice. */
     #close() {
         if (this.interval) clearInterval(this.interval);
 
         const alertHeight = this.element.scrollHeight;
         const alertTransitions = this.element.style.transition;
         this.element.style.transition = '';
+        const that = this;
 
-        requestAnimationFrame(function() {
+        requestAnimationFrame(() => {
             this.element.style.height = alertHeight + 'px';
             this.element.style.opacity = 1;
             this.element.style.marginTop = '0px';
             this.element.style.marginBottom = '0px';
             this.element.style.transition = alertTransitions;
 
-            requestAnimationFrame(function() {
+            requestAnimationFrame(() => {
                 this.element.style.height = '0px';
                 this.element.style.opacity = 0;
             });
         });
 
-        setTimeout(function() {
-            this.container.removeChild(this.element);
-        }, 1000);
+        //setTimeout(() => { this.container.removeChild(this.element); }, 1000)
     }
 
+    /**Executes the creation and display of an alert. */
     Execute() {
         this.#create();
         this.#open();
     }
 }
-
-// Todo: need template methods that set templates
-
-// Alert.Create = function() {
-//     // New to probably refactor this
-//     this.#create();
-//     this.Open();
-// }
