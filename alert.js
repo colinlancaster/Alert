@@ -82,11 +82,11 @@ class Alert {
         this.options.fixed = this.userOptions?.fixed ?? false;
         this.options.position = this.userOptions?.position ?? 'br';
         this.options.container = this.userOptions?.container ?? document.body;
-
-        // I question these next three
         this.options.width = this.userOptions?.width ?? '250px';
         this.options.speed = this.userOptions?.speed ?? 'medium';
         this.options.icon = this.userOptions?.icon ?? '+';
+
+        return this;
     }
 
     /**Find the existing container. */
@@ -427,9 +427,92 @@ class Alert {
 
     /**Public methods */
 
+    /**Fluent method that sets the message property. */
+    Message(message) {
+        if (message === null || message === undefined) return;
+
+        this.options.message = message;
+
+        return this;
+    }
+
+    /**Fluent method that sets the dismissible property. */
+    Dismissible(dismissible) {
+        if (dismissible === null || dismissible === undefined) return;
+
+        this.options.dismissible = dismissible;
+
+        return this;
+    }
+
+    /**Fluent method that sets the timeout property. */
+    Timeout(timeout) {
+        if (timeout === null || timeout === undefined) return;
+
+        this.options.timeout = timeout;
+
+        return this;
+    }
+
+    /**Fluent method that sets the status property. */
+    Status(status) {
+        if (status === null || status === undefined) return;
+
+        this.options.status = status;
+
+        return this;
+    }
+
+    /**Fluent method that sets the fixed property. */
+    Fixed(fixed) {
+        if (fixed === null || fixed === undefined) return;
+
+        this.options.fixed = fixed;
+
+        return this;
+    }
+
+    /**Fluent method that sets the position property. */
+    Position(position) {
+        if (position === null || position === undefined) return;
+
+        this.options.position = position;
+
+        return this;
+    }
+
+    /**Fluent method that sets the width property. */
+    Width(width) {
+        if (width === null || width === undefined) return;
+
+        this.options.width = width;
+
+        return this;
+    }
+
+    /**Fluent method that sets the speed property. */
+    Speed(speed) {
+        if (speed === null || speed === undefined) return;
+
+        this.options.speed = speed;
+
+        return this;
+    }
+
+    /**Fluent method that sets the icon property. */
+    Icon(icon) {
+        if (icon === null || icon === undefined) return;
+
+        this.options.icon = icon;
+
+        return this;
+    }
+
     /**Executes the creation and display of an alert. */
     Execute() {
         this.#create();
         this.#open();
     }
 }
+
+// Set defaults in the template methods only instead of in applyDefaults
