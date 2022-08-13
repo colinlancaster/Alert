@@ -1,4 +1,8 @@
-.js-snackbar-container {
+.alert-container * {
+    box-sizing: border-box;
+}
+
+.alert-container {
     position: absolute;
     bottom: 0;
     right: 0;
@@ -11,14 +15,14 @@
     font-family: inherit, sans-serif;
 }
 
-.js-snackbar-container--top-left {
+.alert-container-top-left {
     bottom: unset;
     right: unset;
     top: 0;
     left: 0;
 }
 
-.js-snackbar-container--top-center {
+.alert-container-top-center {
     top: 0;
     bottom: unset;
     left: 50%;
@@ -26,21 +30,21 @@
     transform: translateX(-50%);
 }
 
-.js-snackbar-container--top-right {
+.alert-container-top-right {
     bottom: unset;
     right: 0;
     left: unset;
     top: 0;
 }
 
-.js-snackbar-container--bottom-left {
+.alert-container-bottom-left {
     bottom: 0;
     right: unset;
     left: 0;
     top: unset;
 }
 
-.js-snackbar-container--bottom-center {
+.alert-container-bottom-center {
     bottom: 0;
     right: unset;
     left: 50%;
@@ -48,15 +52,13 @@
     transform: translateX(-50%);
 }
 
-.js-snackbar-container--fixed {
+.alert-container-fixed {
     position: fixed;
 }
 
-.js-snackbar-container * {
-    box-sizing: border-box;
-}
 
-.js-snackbar__wrapper {
+
+.alert-wrapper {
     overflow: hidden;
     height: auto;
     margin: 0;
@@ -68,7 +70,7 @@
     transition-duration: 0.5s;
 }
 
-.js-snackbar {
+.alert {
     display: inline-flex;
     box-sizing: border-box;
     border-radius: 3px;
@@ -81,22 +83,22 @@
     flex-grow: 1;
 }
 
-.js-snackbar__close,
-.js-snackbar__status,
-.js-snackbar__message-wrapper {
+.alert-close,
+.alert-status,
+.alert-message-wrapper {
     position: relative;
 }
 
-.js-snackbar__message-wrapper {
+.alert-message-wrapper {
     flex: 1;
     padding: 12px;
 }
 
-.js-snackbar__message {
+.alert-message {
     display: inline-block;
 }
 
-.js-snackbar__status {
+.alert-status {
     display: none;
     min-width: 15px;
     margin-right: 5px;
@@ -104,32 +106,32 @@
     background-color: transparent;
 }
 
- .js-snackbar__status.js-snackbar--success,
- .js-snackbar__status.js-snackbar--warning,
- .js-snackbar__status.js-snackbar--danger,
- .js-snackbar__status.js-snackbar--info {
+ .alert-status.alert-success,
+ .alert-status.alert-warning,
+ .alert-status.alert-danger,
+ .alert-status.alert-info {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.js-snackbar__status.js-snackbar--success  {
+.alert-status.alert-success  {
     background-color: #4caf50;
 }
 
-.js-snackbar__status.js-snackbar--warning  {
+.alert-status.alert-warning  {
     background-color: #ff9800;
 }
 
- .js-snackbar__status.js-snackbar--danger {
+ .alert-status.alert-danger {
     background-color: #b90909;
 }
 
- .js-snackbar__status.js-snackbar--info {
+ .alert-status.alert-info {
     background-color: #2196f3;
 }
 
-.js-snackbar__icon {
+.alert-icon {
     display: block;
     border: 2px solid white;
     font-weight: bold;
@@ -141,7 +143,7 @@
     font-family: monospace;
 }
 
-.js-snackbar__action {
+.alert-action {
     display: flex;
     align-items: center;
     padding: 0 10px;
@@ -149,11 +151,11 @@
     cursor: pointer;
 }
 
-.js-snackbar__action:hover {
+.alert-action:hover {
     background-color: #333;
 }
 
-.js-snackbar__close {
+.alert-close {
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -162,6 +164,6 @@
     color: #BBB;
 }
 
-.js-snackbar__close:hover {
+.alert-close:hover {
     background-color: #444;
 }
