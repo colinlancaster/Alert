@@ -93,6 +93,7 @@ class Alert {
             this.container.classList.remove(this.cssClasses.alertFixed);
         }
     }
+
     #getPositionCssClass() {
         switch(this.options.position) {
             case 'bl':
@@ -330,8 +331,7 @@ class Alert {
                 button.onclick = action.function;
             }
         } else {
-            console.log('do we get here?')
-            button.onclick = alert.#close(); // not this
+            button.onclick = alert.#close(); 
         }
 
         element.appendChild(button);
@@ -340,8 +340,7 @@ class Alert {
     /**Adds a dismiss button to the alert. */
     #addDismissButtonTo(element) {
         if (!this.options.dismissible) return;
-        console.log('From addDismissButtonTo')
-        console.dir(this)
+
         const closeButton = document.createElement('span');
         closeButton.classList.add(this.cssClasses.alertClose);
         closeButton.innerText = '\u00d7';
@@ -380,9 +379,9 @@ class Alert {
         const alertHeight = this.element.scrollHeight;
         const alertTransitions = this.element.style.transition;
         this.element.style.transition = '';
-        const that = this;
 
         requestAnimationFrame(() => {
+            console.dir(this);
             this.element.style.height = alertHeight + 'px';
             this.element.style.opacity = 1;
             this.element.style.marginTop = '0px';
