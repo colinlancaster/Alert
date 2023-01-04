@@ -30,6 +30,14 @@
     transform: translateX(-50%);
 }
 
+.alert-container-middle-center {
+    top: 30%;
+    bottom: unset;
+    left: 50%;
+    right: unset;
+    transform: translateX(-50%);
+}
+
 .alert-container-top-right {
     bottom: unset;
     right: 0;
@@ -56,8 +64,6 @@
     position: fixed;
 }
 
-
-
 .alert-wrapper {
     overflow: hidden;
     height: auto;
@@ -79,7 +85,7 @@
     background-color: #262626;
     vertical-align: bottom;
     box-shadow: 0 0 4px 0 black;
-    margin: 0 10px;
+    margin: 5px 10px 0px 19px;
     flex-grow: 1;
 }
 

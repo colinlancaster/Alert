@@ -1,4 +1,3 @@
-// Alert.Create('Test')
 class Alert {
     static CssClasses = {
         alert: 'alert',
@@ -11,6 +10,7 @@ class Alert {
         alertTopCenter: 'alert-container-top-center',
         alertBottomCenter: 'alert-container-bottom-center',
         alertBottomRight: 'alert-container-bottom-right',
+        alertMiddleCenter: 'alert-container-middle-center',
         alertWrapper: 'alert-wrapper',
         alertStatus: 'alert-status',
         alertSuccess: 'alert-success',
@@ -67,27 +67,7 @@ class Alert {
         this.userOptions = opts;
     }
 
-    /**
-     * Utility Functions
-     *
-     *  */
-
-    /**(Deprecated) Applies default values to all of the constructor props.*/
-    #applyDefaults() {
-        this.options.message = this.userOptions?.message ?? 'Operation performed successfully.',
-        this.options.dismissible = this.userOptions?.dismissible ?? true;
-        this.options.timeout = this.userOptions?.timeout ?? 5000;
-        this.options.status = this.userOptions?.status ? this.userOptions.status.toLowerCase().trim() : '';
-        this.options.actions = this.userOptions?.actions ?? [];
-        this.options.fixed = this.userOptions?.fixed ?? false;
-        this.options.position = this.userOptions?.position ?? 'br';
-        this.options.container = this.userOptions?.container ?? document.body;
-        this.options.width = this.userOptions?.width ?? '250px';
-        this.options.speed = this.userOptions?.speed ?? 'medium';
-        this.options.icon = this.userOptions?.icon ?? '+';
-
-        return this;
-    }
+    /** Utility Functions */
 
     /**Find the existing container. */
     #setContainer() {
@@ -128,6 +108,8 @@ class Alert {
             case Alert.Positions.BottomCenter:
             case Alert.Positions.BottomMiddle:
                 return Alert.CssClasses.alertBottomCenter;
+            case Alert.Positions.MiddleCenter:
+                return Alert.CssClasses.alertMiddleCenter;
             default:
                 return Alert.CssClasses.alertBottomRight;
         }
@@ -336,13 +318,13 @@ class Alert {
             if (action.dismiss === true) {
                 button.onclick = function() {
                     action.function();
-                    alert.#close();
+                    alert.#Close();
                 }
             } else {
                 button.onclick = action.function;
             }
         } else {
-            button.onclick = alert.#close();
+            button.onclick = alert.#Close();
         }
 
         element.appendChild(button);
@@ -355,7 +337,7 @@ class Alert {
         const closeButton = document.createElement('span');
         closeButton.classList.add(Alert.CssClasses.alertClose);
         closeButton.innerText = '\u00d7';
-        closeButton.addEventListener('click', () => { this.#close(); })
+        closeButton.addEventListener('click', () => { this.#Close(); })
 
         element.appendChild(closeButton);
     }
@@ -371,7 +353,7 @@ class Alert {
 
     /**Private primary methods. */
 
-    #create() {
+    #Create() {
         //this.#applyDefaults();
         this.#setContainer();
         this.#setPosition();
@@ -382,12 +364,12 @@ class Alert {
         // // If the timeout property isn't false and it's greater than 0...
         if (this.options.timeout !== false && this.options.timeout > 0) {
             // ...Close the Alert after the given amount of time.
-            this.interval = setTimeout(() => { this.#close(); }, this.options.timeout);
+            this.interval = setTimeout(() => { this.#Close(); }, this.options.timeout);
         }
     }
 
     /**Opens the alert. Adds `transitioned` event listener. */
-    #open() {
+    #Open() {
         const contentHeight = this.#getMessageHeight();
         this.element.style.height = contentHeight + 'px';
         this.element.style.opacity = 1;
@@ -401,12 +383,11 @@ class Alert {
     }
 
     /**Closes the alert. Uses `requestAnimationFrame()` to make it look nice. */
-    #close() {
+    #Close() {
         if (this.interval) clearInterval(this.interval);
 
         const alertHeight = this.element.scrollHeight;
         const alertTransitions = this.element.style.transition;
-        console.log(alertTransitions);
         this.element.style.transition = '';
 
         requestAnimationFrame(() => {
@@ -520,15 +501,28 @@ class Alert {
 
     /**Executes the creation and display of an alert. */
     Execute() {
-        this.#create();
-        this.#open();
+        this.#Create();
+        this.#Open();
     }
 
-    static Create(msg) {
+    static CreateAlert(msg) {
         return new Alert()
             .Position('br')
             .Message(msg)
             .Width('250px')
+            .Container(document.body)
+            .Speed('medium')
+            .Timeout(5000)
+            .Icon('+')
+            .Dismissible(true)
+            .Execute()
+    }
+
+    static CreatePrompt(html) {
+        return new Alert()
+            .Position(Alert.Positions.MiddleCenter)
+            .Message(html)
+            .Width('400px')
             .Container(document.body)
             .Speed('medium')
             .Icon('+')
@@ -537,4 +531,22 @@ class Alert {
     }
 }
 
-// Set defaults in the template methods only instead of in applyDefaults
+/*
+// Test Code
+ const html = `
+        <h2>Enter your search below</h2>
+        <form class="searchForm" action="{% url 'search-results' %}" method="POST">
+            <select name="entity" id="entity">
+                <option value="band">Band</option>
+                <option value="post">Post</option>
+                <option value="album">Albums</option>
+                <option value="recordLabel">Record Label</option>
+                <option value="song">Song</option>
+            </select>
+            <input class="searchInput" type="search" name="searchValue" placeholder="Search">
+            <button type="submit">Search</button>
+        </form>
+        <br/><br/>
+        `;
+Alert.CreatePrompt(html);
+*/
