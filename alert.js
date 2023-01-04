@@ -1,4 +1,4 @@
-// Example new Alert({message: 'Snippet successfully copied!'}).Execute()
+// Alert.Create('Test')
 class Alert {
     static CssClasses = {
         alert: 'alert',
@@ -72,7 +72,7 @@ class Alert {
      *
      *  */
 
-    /**Applies default values to all of the constructor props.*/
+    /**(Deprecated) Applies default values to all of the constructor props.*/
     #applyDefaults() {
         this.options.message = this.userOptions?.message ?? 'Operation performed successfully.',
         this.options.dismissible = this.userOptions?.dismissible ?? true;
@@ -372,7 +372,7 @@ class Alert {
     /**Private primary methods. */
 
     #create() {
-        this.#applyDefaults();
+        //this.#applyDefaults();
         this.#setContainer();
         this.#setPosition();
 
@@ -406,10 +406,10 @@ class Alert {
 
         const alertHeight = this.element.scrollHeight;
         const alertTransitions = this.element.style.transition;
+        console.log(alertTransitions);
         this.element.style.transition = '';
 
         requestAnimationFrame(() => {
-            console.dir(this);
             this.element.style.height = alertHeight + 'px';
             this.element.style.opacity = 1;
             this.element.style.marginTop = '0px';
@@ -427,6 +427,15 @@ class Alert {
     }
 
     /**Public methods */
+
+    /**Fluent method that sets the container property */
+    Container(container) {
+        if (container === null || container === undefined) return;
+
+        this.options.container = container;
+
+        return this;
+    }
 
     /**Fluent method that sets the message property. */
     Message(message) {
@@ -513,6 +522,18 @@ class Alert {
     Execute() {
         this.#create();
         this.#open();
+    }
+
+    static Create(msg) {
+        return new Alert()
+            .Position('br')
+            .Message(msg)
+            .Width('250px')
+            .Container(document.body)
+            .Speed('medium')
+            .Icon('+')
+            .Dismissible(true)
+            .Execute()
     }
 }
 
